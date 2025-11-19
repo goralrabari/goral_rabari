@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Goral Rabari | Portfolio</title>
+  <style>
+    /* Base */
+    :root{
+      --pink:#ff69b4;
+      --violet:#8a2be2;
+      --text:#333;
+      --bg:#fdf6f9;
+    }
+    *{box-sizing:border-box}
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      height: 100vh;
+      overflow: hidden; /* prevent scroll */
+      color: var(--text);
+    }
+
+    /* Header */
+    header {
+      background: rgba(255,182,193,0.85);
+      padding: 8px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(6px);
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--violet);
+      letter-spacing: 0.4px;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .nav-links a:hover { color: var(--violet); }
+
+    /* Sections */
+    .section {
+      display: none;
+      height: calc(100vh - 60px);
+      padding: 40px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .section.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+    }
+    h2.section-title {
+      color: var(--violet);
+      margin: 0 0 16px 0;
+      font-size: 1.6rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* Home */
+    .home-container {
+      display: flex;
+      gap: 180px;
+      align-items: center;
+    }
+    .profile-pic {
+      width: 400px;
+      border-radius: 10%;
+      box-shadow: 0 0 20px var(--pink);
+      border: 4px solid rgba(255,182,193,0.5);
+    }
+    .name { font-size: 1.8rem; color: var(--violet); margin: 6px 0; }
+    /* Special effect on role */
+    .role {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background-image: linear-gradient(90deg, #ff1493, #8a2be2, #00ced1);
+      color: transparent;
+      background-clip: text; /* standard */
+      -webkit-background-clip: text; /* for Safari */
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 10px rgba(255,105,180,0.6);
+      animation: glow 3s infinite alternate;
+      margin: 6px 0 10px 0;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px rgba(255,105,180,0.6); }
+      to   { text-shadow: 0 0 20px rgba(138,43,226,0.6); }
+    }
+    .degree { font-size: 1.1rem; margin-top: 6px; }
+    .buttons { margin-top: 12px; }
+    .btn {
+      display: inline-block;
+      margin: 10px 10px 0 0;
+      padding: 8px 18px;
+      background: var(--violet);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn:hover { background: var(--pink); color: #111; transform: translateY(-1px); }
+
+    /* Projects (slider) */
+    .projects-wrap { text-align: center; max-width: 600px; }
+    .slider {
+      position: relative;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .slide {
+      display: none;
+      background: rgba(255,255,255,0.75);
+      border-radius: 10px;
+      padding: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .slide.active { display: block; }
+    .slide h3 { margin: 0 0 6px 0; color: var(--violet); }
+    .slide p { margin: 0; }
+    .slider-controls { margin-top: 12px; }
+    .slider-controls button {
+      background: var(--violet);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      margin: 0 6px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: filter 0.2s;
+    }
+    .slider-controls button:hover { filter: brightness(1.1); }
+
+    /* Contact */
+    .contact-wrap { max-width: 500px; }
+    .contact-wrap p { margin: 0 0 12px 0; }
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      background: rgba(255,255,255,0.75);
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    form input, form textarea {
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(0,0,0,0.15);
+      outline: none;
+      font-size: 0.95rem;
+    }
+    form textarea { min-height: 100px; resize: vertical; }
+    form button {
+      padding: 10px;
+      background: var(--violet);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    form button:hover { background: var(--pink); color: #111; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">Goral Rabari</div>
+      <ul class="nav-links">
+        <li><a onclick="showPage('home')">Home</a></li>
+        <li><a onclick="showPage('projects')">Projects</a></li>
+        <li><a onclick="showPage('contact')">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Home -->
+  <div id="home" class="section active">
+    <div class="home-container">
+      <img src="morlogo.png"  class="profile-pic" />
+      <div>
+        <h2 class="section-title"></h2>
+        <h1>Welcome to My Profile</h1>
+        <h2 class="name">Goral Rabari</h2>
+        <h3 class="role">Software Developer</h3>
+        <p class="degree">BCA Student</p>
+        <div class="buttons">
+          <a onclick="showPage('projects')" class="btn">View Projects</a>
+          <a onclick="showPage('contact')" class="btn">Contact Me</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects -->
+  <div id="projects" class="section">
+    <div class="projects-wrap">
+      <h2 class="section-title">Projects</h2>
+      <div class="slider">
+        <div class="slide active">
+          <h3>Library Management System</h3>
+          <p>A web app to manage books and students.</p>
+        </div>
+        <div class="slide">
+          <h3>Portfolio Website</h3>
+          <p>Personal portfolio showcasing skills and projects.</p>
+        </div>
+        <div class="slide">
+          <h3>Calculator App</h3>
+          <p>Simple calculator built with JavaScript.</p>
+        </div>
+      </div>
+      <div class="slider-controls">
+        <button type="button" onclick="prevSlide()">← Prev</button>
+        <button type="button" onclick="nextSlide()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div id="contact" class="section">
+    <div class="contact-wrap">
+      <h2 class="section-title">Contact</h2>
+      <p>If you’d like to collaborate or have any questions, feel free to reach out!</p>
+      <form onsubmit="event.preventDefault(); alert('Thanks! I will reach out soon.');">
+        <input type="text" placeholder="Your Name" required />
+        <input type="email" placeholder="Your Email" required />
+        <textarea placeholder="Your Message"></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Page switching
+    function showPage(pageId) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      const target = document.getElementById(pageId);
+      if (target) target.classList.add('active');
+    }
+
+    // Slider logic
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+    }
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(currentSlide);
+    }
+  </script>
+
+</body>
+</html>
