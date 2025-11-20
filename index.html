@@ -1,288 +1,593 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="gu">
 <head>
   <meta charset="UTF-8" />
-  <title>Goral Rabari | Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Goral Rabari — Profile</title>
   <style>
-    /* Base */
-    :root{
-      --pink:#ff69b4;
-      --violet:#8a2be2;
-      --text:#333;
-      --bg:#fdf6f9;
+    :root {
+      --bg-overlay: rgba(255,255,255,0.68);
+      --text: #1b1f24;
+      --muted: #5c6672;
+      --accent: #2f7dff;
+      --card: rgba(255,255,255,0.86);
+      --border: rgba(0,0,0,0.08);
+      --shadow: 0 10px 30px rgba(0,0,0,0.12);
+      --nav-bg: rgba(255,255,255,0.65);
+      --link: #1b1f24;
+      --icon: #1b1f24;
     }
-    *{box-sizing:border-box}
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
-      height: 100vh;
-      overflow: hidden; /* prevent scroll */
-      color: var(--text);
+    .dark {
+      --bg-overlay: rgba(0,0,0,0.55);
+      --text: #e6e9ef;
+      --muted: #a8b0bc;
+      --accent: #7bb1ff;
+      --card: rgba(25,29,35,0.86);
+      --border: rgba(255,255,255,0.10);
+      --shadow: 0 10px 30px rgba(0,0,0,0.4);
+      --nav-bg: rgba(25,29,35,0.65);
+      --link: #e6e9ef;
+      --icon: #e6e9ef;
     }
 
-    /* Header */
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--text);
+      background: #000;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background: real snowy landscape */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: url("https://images.unsplash.com/photo-1542708993627-b6e4b9a1b8f0?q=80&w=1600&auto=format&fit=crop") center/cover no-repeat;
+      z-index: -3;
+      will-change: transform;
+    }
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-overlay);
+      z-index: -2;
+      transition: background 0.4s ease;
+      pointer-events: none;
+    }
+
+    /* Snowfall canvas */
+    #snow {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Header and navbar */
     header {
-      background: rgba(255,182,193,0.85);
-      padding: 8px 20px;
       position: sticky;
       top: 0;
       z-index: 1000;
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--border);
     }
-    .navbar {
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
+      padding: 12px 20px;
     }
-    .logo {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: var(--violet);
-      letter-spacing: 0.4px;
-    }
-    .nav-links {
-      list-style: none;
+    .brand {
       display: flex;
-      gap: 15px;
-      margin: 0;
-      padding: 0;
-    }
-    .nav-links a {
-      color: var(--text);
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: var(--link);
       text-decoration: none;
-      font-weight: 500;
-      cursor: pointer;
+      letter-spacing: 0.5px;
     }
-    .nav-links a:hover { color: var(--violet); }
+    .brand .logo {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: var(--accent);
+      box-shadow: 0 8px 20px rgba(47,125,255,0.45);
+    }
+    nav a {
+      color: var(--link);
+      text-decoration: none;
+      margin-left: 16px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      transition: background 0.2s ease;
+    }
+    nav a:hover { background: rgba(127,127,127,0.12); }
+    .theme-toggle { display: flex; gap: 10px; }
+    .icon-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--border); background: transparent; color: var(--icon);
+      display: grid; place-items: center; cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+    .icon-btn:hover { transform: translateY(-1px); background: rgba(127,127,127,0.12); }
+    .icon { font-size: 18px; }
 
-    /* Sections */
-    .section {
-      display: none;
-      height: calc(100vh - 60px);
-      padding: 40px;
-      opacity: 0;
-      transition: opacity 0.5s ease;
+    /* Sections and cards */
+    section { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+      transition: transform 0.25s ease;
     }
-    .section.active {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 1;
-    }
-    h2.section-title {
-      color: var(--violet);
-      margin: 0 0 16px 0;
-      font-size: 1.6rem;
-      letter-spacing: 0.3px;
-    }
+    .card:hover { transform: translateY(-2px); }
 
-    /* Home */
-    .home-container {
-      display: flex;
-      gap: 180px;
+    /* Home layout */
+    .home {
+      display: grid;
+      grid-template-columns: 1.05fr 1.35fr;
+      gap: 28px;
       align-items: center;
+      padding: 28px;
     }
-    .profile-pic {
-      width: 400px;
-      border-radius: 10%;
-      box-shadow: 0 0 20px var(--pink);
-      border: 4px solid rgba(255,182,193,0.5);
+    .photo {
+      position: relative; overflow: hidden; border-radius: 16px; min-height: 320px;
     }
-    .name { font-size: 1.8rem; color: var(--violet); margin: 6px 0; }
-    /* Special effect on role */
-    .role {
-      font-size: 1.6rem;
-      font-weight: 700;
-      background-image: linear-gradient(90deg, #ff1493, #8a2be2, #00ced1);
-      color: transparent;
-      background-clip: text; /* standard */
-      -webkit-background-clip: text; /* for Safari */
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 10px rgba(255,105,180,0.6);
-      animation: glow 3s infinite alternate;
-      margin: 6px 0 10px 0;
+    .photo img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: saturate(105%);
+      transition: transform 0.4s ease;
     }
-    @keyframes glow {
-      from { text-shadow: 0 0 10px rgba(255,105,180,0.6); }
-      to   { text-shadow: 0 0 20px rgba(138,43,226,0.6); }
+    .photo:hover img { transform: scale(1.03); }
+    .intro { padding: 8px; }
+    .intro h1 { margin: 0 0 8px; font-size: 34px; line-height: 1.2; }
+    .intro .name {
+      font-weight: 800; font-size: 22px; margin-bottom: 10px;
+      color: var(--accent);
+      text-shadow: 0 0 8px var(--accent);
+      animation: glow 2s infinite alternate;
     }
-    .degree { font-size: 1.1rem; margin-top: 6px; }
-    .buttons { margin-top: 12px; }
-    .btn {
+    @keyframes glow { from { text-shadow: 0 0 6px var(--accent);} to { text-shadow: 0 0 16px var(--accent);} }
+    .intro .role { font-size: 18px; margin-bottom: 6px; }
+    .typewriter {
       display: inline-block;
-      margin: 10px 10px 0 0;
-      padding: 8px 18px;
-      background: var(--violet);
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      transition: background 0.25s, transform 0.2s;
+      border-right: 2px solid var(--accent);
+      white-space: nowrap;
+      overflow: hidden;
     }
-    .btn:hover { background: var(--pink); color: #111; transform: translateY(-1px); }
+    .sub { color: var(--muted); margin-top: 8px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .badge {
+      padding: 8px 12px; border: 1px solid var(--border);
+      border-radius: 999px; background: rgba(127,127,127,0.10);
+      font-size: 14px;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .badge:hover { transform: translateY(-2px); background: rgba(127,127,127,0.18); }
 
-    /* Projects (slider) */
-    .projects-wrap { text-align: center; max-width: 600px; }
+    /* Projects with slider and arrows */
+    .projects { padding: 28px; }
+    .projects h2 { margin: 0 0 16px; }
     .slider {
-      position: relative;
-      width: 100%;
-      margin-top: 8px;
+      position: relative; overflow: hidden; border-radius: 16px; border: 1px solid var(--border);
     }
+    .slides { display: flex; transition: transform 0.4s ease; }
     .slide {
-      display: none;
-      background: rgba(255,255,255,0.75);
-      border-radius: 10px;
-      padding: 14px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      min-width: 100%;
+      padding: 18px;
+      display: grid; grid-template-columns: 1.2fr 1.1fr;
+      gap: 20px; align-items: center;
     }
-    .slide.active { display: block; }
-    .slide h3 { margin: 0 0 6px 0; color: var(--violet); }
-    .slide p { margin: 0; }
-    .slider-controls { margin-top: 12px; }
-    .slider-controls button {
-      background: var(--violet);
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      margin: 0 6px;
-      cursor: pointer;
-      border-radius: 6px;
-      font-weight: 600;
-      transition: filter 0.2s;
+    .thumb { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slide h3 { margin: 0 0 10px; }
+    .slide .actions { display: flex; gap: 10px; }
+    .btn {
+      padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
+      background: rgba(127,127,127,0.10); color: var(--link);
+      cursor: pointer; transition: background 0.12s ease, transform 0.12s ease;
     }
-    .slider-controls button:hover { filter: brightness(1.1); }
+    .btn:hover { background: rgba(127,127,127,0.18); transform: translateY(-1px); }
 
-    /* Contact */
-    .contact-wrap { max-width: 500px; }
-    .contact-wrap p { margin: 0 0 12px 0; }
-    form {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      background: rgba(255,255,255,0.75);
-      padding: 16px;
-      border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    .arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 42px; height: 42px; border-radius: 999px;
+      display: grid; place-items: center; cursor: pointer;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--border);
+      color: #222;
+      transition: transform 0.15s ease, background 0.15s ease;
     }
-    form input, form textarea {
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid rgba(0,0,0,0.15);
-      outline: none;
-      font-size: 0.95rem;
+    .dark .arrow { background: rgba(25,29,35,0.72); color: var(--icon); }
+    .arrow:hover { transform: translateY(-50%) scale(1.05); background: rgba(255,255,255,0.86); }
+    .arrow.left { left: 12px; }
+    .arrow.right { right: 12px; }
+
+    .slider-controls { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(127,127,127,0.3); border: 1px solid var(--border); cursor: pointer; }
+    .dot.active { background: var(--accent); transform: scale(1.15); }
+
+    /* Modals */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; z-index: 2000; }
+    .modal.open { display: flex; }
+    .modal-card {
+      width: min(900px, 92vw);
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 16px;
+      overflow: hidden;
     }
-    form textarea { min-height: 100px; resize: vertical; }
-    form button {
-      padding: 10px;
-      background: var(--violet);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      margin-top: 6px;
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+    .modal-body { padding: 0; }
+    .modal-preview { width: 100%; aspect-ratio: 16/9; background: #111; }
+    .modal-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .close-x {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: grid; place-items: center; cursor: pointer;
+      background: rgba(127,127,127,0.12); border: 1px solid var(--border); color: var(--icon);
     }
-    form button:hover { background: var(--pink); color: #111; }
+
+    /* Contact: simple form + real icons */
+    .contact { padding: 28px; }
+    .contact h2 { margin: 0 0 16px; }
+    .contact-wrap { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; }
+    .contact-card { padding: 16px; }
+    .contact-form { display: flex; flex-direction: column; gap: 12px; }
+    .contact-form input, .contact-form textarea {
+      padding: 12px; border-radius: 10px; border: 1px solid var(--border);
+      font-size: 14px; width: 100%;
+      background: rgba(127,127,127,0.08);
+      color: var(--text);
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .contact-form input:focus, .contact-form textarea:focus {
+      outline: none; box-shadow: 0 0 0 3px rgba(47,125,255,0.25); border-color: var(--accent);
+    }
+    .contact-form button {
+      padding: 12px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--accent); color: #fff; cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+    .contact-form button:hover { opacity: 0.95; transform: translateY(-1px); }
+
+    .socials {
+      display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .social {
+      width: 44px; height: 44px; border-radius: 999px;
+      display: grid; place-items: center;
+      border: 1px solid var(--border);
+      background: rgba(127,127,127,0.10);
+      color: var(--link);
+      text-decoration: none;
+      transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+    }
+    .social:hover {
+      transform: translateY(-2px) scale(1.08);
+      background: rgba(127,127,127,0.18);
+      color: var(--accent);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    }
+    .social svg { width: 22px; height: 22px; display: block; }
+
+    footer { height: 60px; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .home { grid-template-columns: 1fr; }
+      .slide { grid-template-columns: 1fr; }
+      .contact-wrap { grid-template-columns: 1fr; }
+      .arrow.left { left: 6px; } .arrow.right { right: 6px; }
+    }
   </style>
 </head>
 <body>
+  <div class="bg" id="bg"></div>
+  <div class="overlay" id="overlay"></div>
+  <canvas id="snow"></canvas>
 
-  <!-- Header -->
   <header>
-    <nav class="navbar">
-      <div class="logo">Goral Rabari</div>
-      <ul class="nav-links">
-        <li><a onclick="showPage('home')">Home</a></li>
-        <li><a onclick="showPage('projects')">Projects</a></li>
-        <li><a onclick="showPage('contact')">Contact</a></li>
-      </ul>
-    </nav>
+    <div class="nav">
+      <a href="#home" class="brand">
+        <span class="logo"></span>
+        <span>Goral Rabari</span>
+      </a>
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="theme-toggle">
+        <button class="icon-btn" id="lightBtn" title="Light theme"><span class="icon">☀️</span></button>
+        <button class="icon-btn" id="darkBtn" title="Dark theme"><span class="icon">🌙</span></button>
+      </div>
+    </div>
   </header>
 
-  <!-- Home -->
-  <div id="home" class="section active">
-    <div class="home-container">
-      <img src="morlogo.png"  class="profile-pic" />
-      <div>
-        <h2 class="section-title"></h2>
-        <h1>Welcome to My Profile</h1>
-        <h2 class="name">Goral Rabari</h2>
-        <h3 class="role">Software Developer</h3>
-        <p class="degree">BCA Student</p>
-        <div class="buttons">
-          <a onclick="showPage('projects')" class="btn">View Projects</a>
-          <a onclick="showPage('contact')" class="btn">Contact Me</a>
+  <main>
+    <!-- Home -->
+    <section id="home" class="card home">
+      <div class="photo">
+        <!-- Replace with your real photo -->
+        <img src="https://via.placeholder.com/600x600.png?text=Goral+Rabari" alt="Goral Rabari"/>
+      </div>
+      <div class="intro">
+        <h1>Welcome to my profile</h1>
+        <div class="name">Goral Rabari</div>
+        <div class="role"><span class="typewriter" id="typewriter"></span></div>
+        <div class="sub">BCA Student</div>
+        <div class="badges">
+          <span class="badge">HTML</span>
+          <span class="badge">CSS</span>
+          <span class="badge">Java</span>
+          <span class="badge">Python</span>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- Projects -->
-  <div id="projects" class="section">
-    <div class="projects-wrap">
-      <h2 class="section-title">Projects</h2>
-      <div class="slider">
-        <div class="slide active">
-          <h3>Library Management System</h3>
-          <p>A web app to manage books and students.</p>
+    <!-- Projects -->
+    <section id="projects" class="card projects">
+      <h2>Projects</h2>
+
+      <div class="slider" id="slider">
+        <button class="arrow left" id="prev" aria-label="Previous">‹</button>
+        <div class="slides" id="slides">
+          <!-- Slide 1: Library Management -->
+          <div class="slide">
+            <div class="thumb">
+              <!-- Replace with your real project image -->
+              <img src="https://images.unsplash.com/photo-1519682333058-b0d3e3acbbb1?q=80&w=1200&auto=format&fit=crop" alt="Library Management thumbnail"/>
+            </div>
+            <div>
+              <h3>Library Management System</h3>
+              <div class="actions">
+                <button class="btn" data-modal="libraryModal">View</button>
+              </div>
+            </div>
+          </div>
+          <!-- Slide 2: Calculator -->
+          <div class="slide">
+            <div class="thumb">
+              <!-- Replace with your real calculator image -->
+              <img src="https://images.unsplash.com/photo-1587837073080-113aa3e713d3?q=80&w=1200&auto=format&fit=crop" alt="Calculator thumbnail"/>
+            </div>
+            <div>
+              <h3>Calculator</h3>
+              <div class="actions">
+                <button class="btn" data-modal="calcModal">View</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="slide">
-          <h3>Portfolio Website</h3>
-          <p>Personal portfolio showcasing skills and projects.</p>
-        </div>
-        <div class="slide">
-          <h3>Calculator App</h3>
-          <p>Simple calculator built with JavaScript.</p>
-        </div>
+        <button class="arrow right" id="next" aria-label="Next">›</button>
       </div>
+
       <div class="slider-controls">
-        <button type="button" onclick="prevSlide()">← Prev</button>
-        <button type="button" onclick="nextSlide()">Next →</button>
+        <div class="dot active" data-slide="0" aria-label="Slide 1"></div>
+        <div class="dot" data-slide="1" aria-label="Slide 2"></div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="card contact">
+      <h2>Contact</h2>
+      <div class="contact-wrap">
+        <div class="contact-card">
+          <form class="contact-form" id="contactForm">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <textarea id="message" rows="4" placeholder="Your Message" required></textarea>
+            <button type="submit">Send</button>
+          </form>
+        </div>
+        <div class="contact-card">
+          <h3 class="sub">Connect</h3>
+          <div class="socials">
+            <!-- GitHub -->
+            <a class="social" href="https://github.com/your-username" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 .5A12 12 0 0 0 0 12.7c0 5.38 3.49 9.94 8.35 11.55.61.12.83-.27.83-.6v-2.1c-3.39.75-4.1-1.46-4.1-1.46-.56-1.43-1.37-1.81-1.37-1.81-1.12-.79.08-.77.08-.77 1.24.09 1.9 1.29 1.9 1.29 1.1 1.95 2.88 1.39 3.58 1.06.11-.82.43-1.39.79-1.71-2.71-.31-5.56-1.39-5.56-6.2 0-1.37.48-2.49 1.28-3.37-.13-.32-.56-1.62.12-3.38 0 0 1.05-.34 3.43 1.29 1-.28 2.08-.42 3.15-.42s2.15.14 3.15.42c2.38-1.63 3.43-1.29 3.43-1.29.68 1.76.25 3.06.12 3.38.8.88 1.28 2 1.28 3.37 0 4.83-2.86 5.88-5.58 6.19.44.38.84 1.12.84 2.26v3.35c0 .34.22.74.84.61A12.02 12.02 0 0 0 24 12.7 12 12 0 0 0 12 .5Z"/>
+              </svg>
+            </a>
+            <!-- LinkedIn -->
+            <a class="social" href="https://www.linkedin.com/in/your-username" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM14.5 9c-2.36 0-3.41 1.29-4 2.2V9H7v12h3.5v-6.5c0-1.73.33-3.4 2.5-3.4 2.13 0 2.15 1.97 2.15 3.5V21H19v-7.2c0-3.85-2.06-4.8-4.5-4.8z"/>
+              </svg>
+            </a>
+            <!-- Instagram -->
+            <a class="social" href="https://www.instagram.com/your-username" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm6-1.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer></footer>
+
+  <!-- Modals -->
+  <div class="modal" id="libraryModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <strong>Library Management — UI/UX Preview</strong>
+        <button class="close-x" data-close>✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-preview">
+          <!-- Replace with actual full design image -->
+          <img src="https://images.unsplash.com/photo-1532614338840-16b6b0d7f43f?q=80&w=1600&auto=format&fit=crop" alt="Library frontend design"/>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Contact -->
-  <div id="contact" class="section">
-    <div class="contact-wrap">
-      <h2 class="section-title">Contact</h2>
-      <p>If you’d like to collaborate or have any questions, feel free to reach out!</p>
-      <form onsubmit="event.preventDefault(); alert('Thanks! I will reach out soon.');">
-        <input type="text" placeholder="Your Name" required />
-        <input type="email" placeholder="Your Email" required />
-        <textarea placeholder="Your Message"></textarea>
-        <button type="submit">Send</button>
-      </form>
+  <div class="modal" id="calcModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <strong>Calculator — UI/UX Preview</strong>
+        <button class="close-x" data-close>✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-preview">
+          <!-- Replace with actual full design image -->
+          <img src="https://images.unsplash.com/photo-1588771930263-65cf7a6d5989?q=80&w=1600&auto=format&fit=crop" alt="Calculator frontend design"/>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    // Page switching
-    function showPage(pageId) {
-      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-      const target = document.getElementById(pageId);
-      if (target) target.classList.add('active');
+    // Theme toggle with persistence
+    const lightBtn = document.getElementById('lightBtn');
+    const darkBtn = document.getElementById('darkBtn');
+    const root = document.documentElement;
+    function setTheme(mode) {
+      if (mode === 'dark') { root.classList.add('dark'); localStorage.setItem('theme', 'dark'); }
+      else { root.classList.remove('dark'); localStorage.setItem('theme', 'light'); }
     }
+    (function(){
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(saved ? saved : (prefersDark ? 'dark' : 'light'));
+    })();
+    lightBtn.addEventListener('click', () => setTheme('light'));
+    darkBtn.addEventListener('click', () => setTheme('dark'));
 
-    // Slider logic
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slide');
+    // Typewriter effect: Software Developer looping
+    const tw = document.getElementById('typewriter');
+    const phrase = "Software Developer";
+    let ci = 0, deleting = false;
+    const speed = { type: 80, delete: 45, pause: 900 };
+    function typeLoop() {
+      if (!deleting) {
+        tw.textContent = phrase.slice(0, ++ci);
+        if (ci === phrase.length) { deleting = true; setTimeout(typeLoop, speed.pause); return; }
+      } else {
+        tw.textContent = phrase.slice(0, --ci);
+        if (ci === 0) { deleting = false; }
+      }
+      setTimeout(typeLoop, deleting ? speed.delete : speed.type);
+    }
+    typeLoop();
 
-    function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
-      });
+    // Slider with dots + arrows
+    const slidesWrap = document.getElementById('slides');
+    const dots = Array.from(document.querySelectorAll('.dot'));
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    let current = 0;
+    function updateSlider(index) {
+      current = Math.max(0, Math.min(index, dots.length - 1));
+      slidesWrap.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
     }
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % slides.length;
-      showSlide(currentSlide);
+    dots.forEach((d, i) => d.addEventListener('click', () => updateSlider(i)));
+    prev.addEventListener('click', () => updateSlider(current - 1));
+    next.addEventListener('click', () => updateSlider(current + 1));
+
+    // Modals open/close
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (!m) return;
+      m.classList.add('open');
+      m.setAttribute('aria-hidden', 'false');
     }
-    function prevSlide() {
-      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-      showSlide(currentSlide);
+    function closeModal(el) {
+      const m = el.closest('.modal');
+      if (!m) return;
+      m.classList.remove('open');
+      m.setAttribute('aria-hidden', 'true');
     }
+    document.querySelectorAll('.actions .btn[data-modal]').forEach(btn => {
+      btn.addEventListener('click', () => openModal(btn.dataset.modal));
+    });
+    document.querySelectorAll('[data-close]').forEach(btn => {
+      btn.addEventListener('click', () => closeModal(btn));
+    });
+    document.querySelectorAll('.modal').forEach(m => {
+      m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); });
+    });
+
+    // Contact form (simple submit)
+    const form = document.getElementById('contactForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+      if (!name || !email || !message) return;
+      alert("Thanks, " + name + "! Your message has been noted.");
+      form.reset();
+    });
+
+    // Smooth overlay transition on scroll (text vs background transfer effect)
+    const overlay = document.getElementById('overlay');
+    const bg = document.getElementById('bg');
+    function onScroll() {
+      const y = window.scrollY || document.documentElement.scrollTop;
+      // Overlay alpha changes between 0.50 and 0.75 based on scroll
+      const base = getComputedStyle(document.documentElement).getPropertyValue('--bg-overlay');
+      // Parse current mode quickly: we'll compute a dynamic alpha
+      const minA = document.documentElement.classList.contains('dark') ? 0.45 : 0.55;
+      const maxA = document.documentElement.classList.contains('dark') ? 0.70 : 0.78;
+      const t = Math.min(1, y / 600);
+      const a = minA + (maxA - minA) * t;
+      overlay.style.background = `rgba(${document.documentElement.classList.contains('dark') ? '0,0,0' : '255,255,255'},${a})`;
+      // Slight parallax for background to feel real
+      bg.style.transform = `translateY(${y * 0.05}px)`;
+    }
+    window.addEventListener('scroll', onScroll);
+    onScroll();
+
+    // Snowfall (canvas) — denser, varied sizes for realistic feel
+    const canvas = document.getElementById('snow');
+    const ctx = canvas.getContext('2d');
+    let W, H, flakes = [];
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      flakes = [];
+      const count = Math.floor(W * H / 14000); // density
+      for (let i = 0; i < count; i++) {
+        flakes.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 2.8 + 0.7,     // radius varies
+          a: Math.random() * Math.PI * 2,    // angle for sway
+          v: Math.random() * 0.8 + 0.35,     // fall speed varies
+          sway: Math.random() * 1.2 + 0.3    // horizontal sway intensity
+        });
+      }
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      for (const f of flakes) {
+        f.y += f.v;
+        f.a += 0.01 + (f.r * 0.001); // slightly faster sway for larger flakes
+        f.x += Math.sin(f.a) * f.sway * 0.6;
+        if (f.y > H + 6) { f.y = -6; f.x = Math.random() * W; }
+        if (f.x < -12) { f.x = W + 12; }
+        if (f.x > W + 12) { f.x = -12; }
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
   </script>
-
 </body>
 </html>
