@@ -3,591 +3,645 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Goral Rabari — Profile</title>
+  <title>Goral Rabari | Personal Profile</title>
+   <!-- Font Awesome for social icons -->
+  <link rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    /* =========================
+       Base variables & themes
+       ========================= */
     :root {
-      --bg-overlay: rgba(255,255,255,0.68);
-      --text: #1b1f24;
-      --muted: #5c6672;
-      --accent: #2f7dff;
-      --card: rgba(255,255,255,0.86);
-      --border: rgba(0,0,0,0.08);
-      --shadow: 0 10px 30px rgba(0,0,0,0.12);
-      --nav-bg: rgba(255,255,255,0.65);
-      --link: #1b1f24;
-      --icon: #1b1f24;
+      --bg: #0e0f12;
+      --card: #151720;
+      --text: #eaeef6;
+      --muted: #a8b0c2;
+      --primary: #ffd247; /* warm yellow */
+      --accent: #6ea1ff;  /* soft blue */
+      --link: #7bd389;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 14px;
+      --blur: saturate(1.05) contrast(1.02);
     }
-    .dark {
-      --bg-overlay: rgba(0,0,0,0.55);
-      --text: #e6e9ef;
-      --muted: #a8b0bc;
-      --accent: #7bb1ff;
-      --card: rgba(25,29,35,0.86);
-      --border: rgba(255,255,255,0.10);
-      --shadow: 0 10px 30px rgba(0,0,0,0.4);
-      --nav-bg: rgba(25,29,35,0.65);
-      --link: #e6e9ef;
-      --icon: #e6e9ef;
+    .light {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #111318;
+      --muted: #525a6a;
+      --primary: #ffb800;
+      --accent: #3b78ff;
+      --link: #2aa865;
+      --shadow: 0 10px 24px rgba(0,0,0,0.12);
+      --blur: saturate(1.08) contrast(1.03);
     }
 
-    html { scroll-behavior: smooth; }
+    /* =========================
+       Global layout & background
+       ========================= */
+    html, body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans", "Microsoft YaHei", sans-serif;
       color: var(--text);
-      background: #000;
-      min-height: 100vh;
+      background: var(--bg);
       overflow-x: hidden;
     }
 
-    /* Background: real snowy landscape */
-    .bg {
+    /* background image with subtle overlay; replace URL if you prefer */
+    body::before {
+      content: "";
       position: fixed;
       inset: 0;
-      background: url("https://images.unsplash.com/photo-1542708993627-b6e4b9a1b8f0?q=80&w=1600&auto=format&fit=crop") center/cover no-repeat;
-      z-index: -3;
-      will-change: transform;
-    }
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: var(--bg-overlay);
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.55)),
+        url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      filter: var(--blur);
       z-index: -2;
-      transition: background 0.4s ease;
-      pointer-events: none;
     }
 
-    /* Snowfall canvas */
+    /* snowfall canvas sits above background, below content */
     #snow {
       position: fixed;
       inset: 0;
-      z-index: -1;
       pointer-events: none;
+      z-index: -1;
     }
 
-    /* Header and navbar */
-    header {
+    /* =========================
+       Navbar
+       ========================= */
+    .nav {
       position: sticky;
       top: 0;
-      z-index: 1000;
       backdrop-filter: blur(8px);
-      background: var(--nav-bg);
-      border-bottom: 1px solid var(--border);
+      background: color-mix(in hsl, var(--bg) 80%, transparent);
+      border-bottom: 1px solid color-mix(in hsl, var(--text) 10%, transparent);
+      z-index: 10;
     }
-    .nav {
+    .nav-inner {
       max-width: 1100px;
       margin: 0 auto;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 20px;
     }
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-weight: 800;
-      color: var(--link);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .brand .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 12px var(--primary);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 8px var(--primary); }
+      50% { transform: scale(1.2); box-shadow: 0 0 18px var(--primary); }
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--text);
       text-decoration: none;
-      letter-spacing: 0.5px;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: 220ms ease;
     }
-    .brand .logo {
-      width: 26px; height: 26px; border-radius: 6px;
-      background: var(--accent);
-      box-shadow: 0 8px 20px rgba(47,125,255,0.45);
+    .nav-links a:hover {
+      background: color-mix(in hsl, var(--text) 8%, transparent);
+      transform: translateY(-1px);
     }
-    nav a {
-      color: var(--link);
-      text-decoration: none;
-      margin-left: 16px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      transition: background 0.2s ease;
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid color-mix(in hsl, var(--text) 10%, transparent);
+      background: color-mix(in hsl, var(--bg) 60%, transparent);
+      cursor: pointer;
+      color: var(--text);
+      transition: 220ms ease;
+      user-select: none;
     }
-    nav a:hover { background: rgba(127,127,127,0.12); }
-    .theme-toggle { display: flex; gap: 10px; }
-    .icon-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      border: 1px solid var(--border); background: transparent; color: var(--icon);
-      display: grid; place-items: center; cursor: pointer;
-      transition: transform 0.12s ease, background 0.12s ease;
-    }
-    .icon-btn:hover { transform: translateY(-1px); background: rgba(127,127,127,0.12); }
-    .icon { font-size: 18px; }
+    .theme-toggle:hover { transform: translateY(-1px); }
 
-    /* Sections and cards */
-    section { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
+    /* =========================
+       Sections
+       ========================= */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: color-mix(in hsl, var(--card) 88%, transparent);
+      border: 1px solid color-mix(in hsl, var(--text) 8%, transparent);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
-      border-radius: 18px;
-      transition: transform 0.25s ease;
     }
-    .card:hover { transform: translateY(-2px); }
 
-    /* Home layout */
-    .home {
+    /* =========================
+       Home hero (right-side heading)
+       ========================= */
+    .hero {
       display: grid;
-      grid-template-columns: 1.05fr 1.35fr;
+      grid-template-columns: 1.2fr 1fr; /* text left, image right by default */
       gap: 28px;
       align-items: center;
-      padding: 28px;
     }
-    .photo {
-      position: relative; overflow: hidden; border-radius: 16px; min-height: 320px;
-    }
-    .photo img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-      filter: saturate(105%);
-      transition: transform 0.4s ease;
-    }
-    .photo:hover img { transform: scale(1.03); }
-    .intro { padding: 8px; }
-    .intro h1 { margin: 0 0 8px; font-size: 34px; line-height: 1.2; }
-    .intro .name {
-      font-weight: 800; font-size: 22px; margin-bottom: 10px;
-      color: var(--accent);
-      text-shadow: 0 0 8px var(--accent);
-      animation: glow 2s infinite alternate;
-    }
-    @keyframes glow { from { text-shadow: 0 0 6px var(--accent);} to { text-shadow: 0 0 16px var(--accent);} }
-    .intro .role { font-size: 18px; margin-bottom: 6px; }
-    .typewriter {
-      display: inline-block;
-      border-right: 2px solid var(--accent);
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    .sub { color: var(--muted); margin-top: 8px; }
-    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-    .badge {
-      padding: 8px 12px; border: 1px solid var(--border);
-      border-radius: 999px; background: rgba(127,127,127,0.10);
-      font-size: 14px;
-      transition: transform 0.15s ease, background 0.15s ease;
-    }
-    .badge:hover { transform: translateY(-2px); background: rgba(127,127,127,0.18); }
+    /* flip columns to place heading on right side explicitly */
+    .hero .text { grid-column: 2; }
+    .hero .visual { grid-column: 1; }
 
-    /* Projects with slider and arrows */
-    .projects { padding: 28px; }
-    .projects h2 { margin: 0 0 16px; }
+    .headline {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: yellow; /* highlight name */
+}
+
+.typewriter {
+  font-size: 20px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  border-right: 2px solid var(--accent);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.skills {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+    .hero .visual {
+      display: grid;
+      place-items: center;
+    }
+    .hero {
+  display: flex;
+  align-items: center;
+  gap: 30px; /* space between image and text */
+}
+
+.avatar {
+  width: 300px;
+  height: 300px;
+  border-radius: 12px;
+  background: #ccc; /* replace with your photo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+img
+{
+  height: 300px;
+  width: 300px;
+}
+
+.text {
+  flex: 1;
+  text-align: left;
+}
+
+    /* =========================
+       Profile slider with two projects
+       ========================= */
     .slider {
-      position: relative; overflow: hidden; border-radius: 16px; border: 1px solid var(--border);
-    }
-    .slides { display: flex; transition: transform 0.4s ease; }
-    .slide {
-      min-width: 100%;
-      padding: 18px;
-      display: grid; grid-template-columns: 1.2fr 1.1fr;
-      gap: 20px; align-items: center;
-    }
-    .thumb { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .slide h3 { margin: 0 0 10px; }
-    .slide .actions { display: flex; gap: 10px; }
-    .btn {
-      padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
-      background: rgba(127,127,127,0.10); color: var(--link);
-      cursor: pointer; transition: background 0.12s ease, transform 0.12s ease;
-    }
-    .btn:hover { background: rgba(127,127,127,0.18); transform: translateY(-1px); }
-
-    .arrow {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      width: 42px; height: 42px; border-radius: 999px;
-      display: grid; place-items: center; cursor: pointer;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid var(--border);
-      color: #222;
-      transition: transform 0.15s ease, background 0.15s ease;
-    }
-    .dark .arrow { background: rgba(25,29,35,0.72); color: var(--icon); }
-    .arrow:hover { transform: translateY(-50%) scale(1.05); background: rgba(255,255,255,0.86); }
-    .arrow.left { left: 12px; }
-    .arrow.right { right: 12px; }
-
-    .slider-controls { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
-    .dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(127,127,127,0.3); border: 1px solid var(--border); cursor: pointer; }
-    .dot.active { background: var(--accent); transform: scale(1.15); }
-
-    /* Modals */
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; z-index: 2000; }
-    .modal.open { display: flex; }
-    .modal-card {
-      width: min(900px, 92vw);
-      background: var(--card);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      border-radius: 16px;
+      position: relative;
       overflow: hidden;
+      border-radius: var(--radius);
     }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
-    .modal-body { padding: 0; }
-    .modal-preview { width: 100%; aspect-ratio: 16/9; background: #111; }
-    .modal-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .close-x {
-      width: 36px; height: 36px; border-radius: 10px;
-      display: grid; place-items: center; cursor: pointer;
-      background: rgba(127,127,127,0.12); border: 1px solid var(--border); color: var(--icon);
+    .slides {
+      display: flex;
+      transition: transform 460ms ease;
     }
+    .slide {
+      flex: 0 0 100%;
+      padding: 24px;
+    }
+    .project {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .project .image {
+      width: 100%;
+      aspect-ratio: 16/10;
+      border-radius: 14px;
+      background: color-mix(in hsl, var(--card) 90%, transparent);
+      border: 1px solid color-mix(in hsl, var(--text) 8%, transparent);
+      box-shadow: var(--shadow);
+      background-size: cover;
+      background-position: center;
+    }
+    .project .info h3 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+    .project .info p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+    .slider-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 0 2px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: color-mix(in hsl, var(--text) 25%, transparent);
+      cursor: pointer;
+      transition: 220ms ease;
+    }
+    .dot.active { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
 
-    /* Contact: simple form + real icons */
-    .contact { padding: 28px; }
-    .contact h2 { margin: 0 0 16px; }
-    .contact-wrap { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; }
-    .contact-card { padding: 16px; }
-    .contact-form { display: flex; flex-direction: column; gap: 12px; }
-    .contact-form input, .contact-form textarea {
-      padding: 12px; border-radius: 10px; border: 1px solid var(--border);
-      font-size: 14px; width: 100%;
-      background: rgba(127,127,127,0.08);
+    /* =========================
+       Contact form & social bar
+       ========================= */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+    }
+    form {
+      display: grid;
+      gap: 12px;
+    }
+    label {
+      font-weight: 600;
+    }
+    input, textarea, button {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid color-mix(in hsl, var(--text) 12%, transparent);
+      background: color-mix(in hsl, var(--card) 92%, transparent);
       color: var(--text);
-      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+      font-size: 15px;
+      outline: none;
     }
-    .contact-form input:focus, .contact-form textarea:focus {
-      outline: none; box-shadow: 0 0 0 3px rgba(47,125,255,0.25); border-color: var(--accent);
+    textarea { resize: vertical; min-height: 110px; }
+    button {
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 8px 18px color-mix(in hsl, var(--accent) 30%, transparent);
+      transition: transform 180ms ease;
     }
-    .contact-form button {
-      padding: 12px; border-radius: 10px; border: 1px solid var(--border);
-      background: var(--accent); color: #fff; cursor: pointer;
-      transition: transform 0.12s ease, opacity 0.12s ease;
-    }
-    .contact-form button:hover { opacity: 0.95; transform: translateY(-1px); }
+    button:hover { transform: translateY(-1px); }
 
-    .socials {
-      display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
-      margin-top: 12px;
-    }
     .social {
-      width: 44px; height: 44px; border-radius: 999px;
-      display: grid; place-items: center;
-      border: 1px solid var(--border);
-      background: rgba(127,127,127,0.10);
-      color: var(--link);
-      text-decoration: none;
-      transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
-    }
-    .social:hover {
-      transform: translateY(-2px) scale(1.08);
-      background: rgba(127,127,127,0.18);
-      color: var(--accent);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
-    }
-    .social svg { width: 22px; height: 22px; display: block; }
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
 
-    footer { height: 60px; }
+.social a {
+  font-size: 30px;   /* icon size */
+  color: var(--text);
+  text-decoration: none;
+  transition: filter 160ms ease, transform 160ms ease;
+}
 
-    /* Responsive */
+.social a:hover {
+  filter: brightness(1.4);
+  transform: translateY(-2px);
+}
+    /* =========================
+       Hover polish & transitions
+       ========================= */
+    .card:hover { transform: translateY(-2px); transition: 220ms ease; }
+    .section-title {
+      font-size: 18px;
+      letter-spacing: 0.3px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* =========================
+       Responsive
+       ========================= */
     @media (max-width: 900px) {
-      .home { grid-template-columns: 1fr; }
-      .slide { grid-template-columns: 1fr; }
-      .contact-wrap { grid-template-columns: 1fr; }
-      .arrow.left { left: 6px; } .arrow.right { right: 6px; }
+      .hero {
+        grid-template-columns: 1fr;
+      }
+      .hero .text, .hero .visual {
+        grid-column: 1;
+        text-align: center;
+      }
+      .hero .headline, .hero .name, .typewriter { text-align: center; }
+      .project {
+        grid-template-columns: 1fr;
+      }
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
-<body>
-  <div class="bg" id="bg"></div>
-  <div class="overlay" id="overlay"></div>
+<body class="light"> <!-- default light; toggler switches -->
   <canvas id="snow"></canvas>
 
-  <header>
-    <div class="nav">
-      <a href="#home" class="brand">
-        <span class="logo"></span>
-        <span>Goral Rabari</span>
-      </a>
-      <nav>
+  <!-- =========================
+       Navbar
+       ========================= -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand"><span class="dot"></span> Goral Rabari</div>
+      <div class="nav-links">
         <a href="#home">Home</a>
-        <a href="#projects">Projects</a>
+        <a href="#profile">Profile</a>
         <a href="#contact">Contact</a>
-      </nav>
-      <div class="theme-toggle">
-        <button class="icon-btn" id="lightBtn" title="Light theme"><span class="icon">☀️</span></button>
-        <button class="icon-btn" id="darkBtn" title="Dark theme"><span class="icon">🌙</span></button>
+        <div class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
+        </div>
       </div>
     </div>
-  </header>
+  </nav>
 
-  <main>
-    <!-- Home -->
-    <section id="home" class="card home">
-      <div class="photo">
-        <!-- Replace with your real photo -->
-        <img src="https://via.placeholder.com/600x600.png?text=Goral+Rabari" alt="Goral Rabari"/>
+  <!-- =========================
+       Home
+       ========================= -->
+  <section id="home">
+  <div class="card hero" style="display:flex; align-items:center; gap:30px;">
+    
+    <!-- Left side image -->
+    <div class="visual">
+      <div class="avatar">
+        <img src="morlogo.png">
       </div>
-      <div class="intro">
-        <h1>Welcome to my profile</h1>
-        <div class="name">Goral Rabari</div>
-        <div class="role"><span class="typewriter" id="typewriter"></span></div>
-        <div class="sub">BCA Student</div>
-        <div class="badges">
-          <span class="badge">HTML</span>
-          <span class="badge">CSS</span>
-          <span class="badge">Java</span>
-          <span class="badge">Python</span>
-        </div>
+    </div>
+    
+    <!-- Right side text block -->
+    <div class="text" style="text-align:left;">
+      <!-- Heading -->
+      <div class="headline">Welcome to my profile</div>
+      
+      <!-- Name in yellow -->
+      <div class="name" style="color:yellow;">Goral Rabari</div>
+      
+      <!-- Typewriter effect -->
+      <div class="typewriter" id="typewriter"></div>
+      
+      <!-- Skills -->
+      <div class="skills">
+        HTML • CSS • Java • Python
       </div>
-    </section>
-
-    <!-- Projects -->
-    <section id="projects" class="card projects">
-      <h2>Projects</h2>
-
-      <div class="slider" id="slider">
-        <button class="arrow left" id="prev" aria-label="Previous">‹</button>
-        <div class="slides" id="slides">
-          <!-- Slide 1: Library Management -->
-          <div class="slide">
-            <div class="thumb">
-              <!-- Replace with your real project image -->
-              <img src="https://images.unsplash.com/photo-1519682333058-b0d3e3acbbb1?q=80&w=1200&auto=format&fit=crop" alt="Library Management thumbnail"/>
-            </div>
-            <div>
+    </div>
+    
+  </div>
+</section>
+  <!-- =========================
+       Profile (Projects slider)
+       ========================= -->
+  <section id="profile">
+    <div class="section-title">Profile • Featured projects</div>
+    <div class="card slider" id="slider">
+      <div class="slides" id="slides">
+        <!-- Slide 1: Library Management System -->
+        <div class="slide">
+          <div class="project">
+            <div class="image" id="libImage"
+                 style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200&auto=format&fit=crop');"></div>
+            <div class="info">
               <h3>Library Management System</h3>
-              <div class="actions">
-                <button class="btn" data-modal="libraryModal">View</button>
-              </div>
-            </div>
-          </div>
-          <!-- Slide 2: Calculator -->
-          <div class="slide">
-            <div class="thumb">
-              <!-- Replace with your real calculator image -->
-              <img src="https://images.unsplash.com/photo-1587837073080-113aa3e713d3?q=80&w=1200&auto=format&fit=crop" alt="Calculator thumbnail"/>
-            </div>
-            <div>
-              <h3>Calculator</h3>
-              <div class="actions">
-                <button class="btn" data-modal="calcModal">View</button>
-              </div>
+              <p>CRUD operations, member records, book inventory, issue/return tracking.</p>
+              <ul>
+                <li><strong>Stack:</strong> React, Django, MSSQL</li>
+                <li><strong>Highlights:</strong> Clean UI, role-based access, responsive layout</li>
+              </ul>
             </div>
           </div>
         </div>
-        <button class="arrow right" id="next" aria-label="Next">›</button>
+
+        <!-- Slide 2: Calculator -->
+        <div class="slide">
+          <div class="project">
+            <div class="image" id="calcImage"
+                 style="background-image: url('https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?q=80&w=1200&auto=format&fit=crop');"></div>
+            <div class="info">
+              <h3>Calculator</h3>
+              <p>Simple, fast calculator with keyboard input and clear visual layout.</p>
+              <ul>
+                <li><strong>Stack:</strong> HTML, CSS, JavaScript</li>
+                <li><strong>Highlights:</strong> Precise spacing, pastel theme, smooth animations</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="slider-controls">
-        <div class="dot active" data-slide="0" aria-label="Slide 1"></div>
-        <div class="dot" data-slide="1" aria-label="Slide 2"></div>
-      </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="card contact">
-      <h2>Contact</h2>
-      <div class="contact-wrap">
-        <div class="contact-card">
-          <form class="contact-form" id="contactForm">
-            <input type="text" id="name" placeholder="Your Name" required>
-            <input type="email" id="email" placeholder="Your Email" required>
-            <textarea id="message" rows="4" placeholder="Your Message" required></textarea>
-            <button type="submit">Send</button>
-          </form>
-        </div>
-        <div class="contact-card">
-          <h3 class="sub">Connect</h3>
-          <div class="socials">
-            <!-- GitHub -->
-            <a class="social" href="https://github.com/your-username" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 .5A12 12 0 0 0 0 12.7c0 5.38 3.49 9.94 8.35 11.55.61.12.83-.27.83-.6v-2.1c-3.39.75-4.1-1.46-4.1-1.46-.56-1.43-1.37-1.81-1.37-1.81-1.12-.79.08-.77.08-.77 1.24.09 1.9 1.29 1.9 1.29 1.1 1.95 2.88 1.39 3.58 1.06.11-.82.43-1.39.79-1.71-2.71-.31-5.56-1.39-5.56-6.2 0-1.37.48-2.49 1.28-3.37-.13-.32-.56-1.62.12-3.38 0 0 1.05-.34 3.43 1.29 1-.28 2.08-.42 3.15-.42s2.15.14 3.15.42c2.38-1.63 3.43-1.29 3.43-1.29.68 1.76.25 3.06.12 3.38.8.88 1.28 2 1.28 3.37 0 4.83-2.86 5.88-5.58 6.19.44.38.84 1.12.84 2.26v3.35c0 .34.22.74.84.61A12.02 12.02 0 0 0 24 12.7 12 12 0 0 0 12 .5Z"/>
-              </svg>
-            </a>
-            <!-- LinkedIn -->
-            <a class="social" href="https://www.linkedin.com/in/your-username" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM14.5 9c-2.36 0-3.41 1.29-4 2.2V9H7v12h3.5v-6.5c0-1.73.33-3.4 2.5-3.4 2.13 0 2.15 1.97 2.15 3.5V21H19v-7.2c0-3.85-2.06-4.8-4.5-4.8z"/>
-              </svg>
-            </a>
-            <!-- Instagram -->
-            <a class="social" href="https://www.instagram.com/your-username" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm6-1.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer></footer>
-
-  <!-- Modals -->
-  <div class="modal" id="libraryModal" aria-hidden="true">
-    <div class="modal-card">
-      <div class="modal-header">
-        <strong>Library Management — UI/UX Preview</strong>
-        <button class="close-x" data-close>✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="modal-preview">
-          <!-- Replace with actual full design image -->
-          <img src="https://images.unsplash.com/photo-1532614338840-16b6b0d7f43f?q=80&w=1600&auto=format&fit=crop" alt="Library frontend design"/>
-        </div>
+        <div class="dot active" data-index="0" aria-label="Slide 1"></div>
+        <div class="dot" data-index="1" aria-label="Slide 2"></div>
       </div>
     </div>
+  </section>
+
+  <!-- =========================
+       Contact
+       ========================= -->
+ <section id="contact">
+  <div class="section-title">Contact • Let’s get in touch</div>
+  
+  <div class="card" style="padding:20px;">
+    <!-- Contact form -->
+    <form id="contactForm">
+      <div>
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" placeholder="Your name" required>
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com" required>
+      </div>
+      <div>
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Write your message..." required></textarea>
+      </div>
+      <button type="submit">Send</button>
+      <p id="formStatus" style="color: var(--muted); margin: 8px 0 0;"></p>
+    </form>
   </div>
 
-  <div class="modal" id="calcModal" aria-hidden="true">
-    <div class="modal-card">
-      <div class="modal-header">
-        <strong>Calculator — UI/UX Preview</strong>
-        <button class="close-x" data-close>✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="modal-preview">
-          <!-- Replace with actual full design image -->
-          <img src="https://images.unsplash.com/photo-1588771930263-65cf7a6d5989?q=80&w=1600&auto=format&fit=crop" alt="Calculator frontend design"/>
-        </div>
-      </div>
-    </div>
+  <!-- Social icons directly below form -->
+  <div class="social">
+    <a href="https://github.com/" class="social-link" aria-label="GitHub">
+      <i class="fab fa-github"></i>
+    </a>
+    <a href="https://linkedin.com/" class="social-link" aria-label="LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://instagram.com/" class="social-link" aria-label="Instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
   </div>
+</section>
+  <!-- =========================
+       Footer spacer
+       ========================= -->
+  <section style="padding-bottom: 100px;"></section>
 
   <script>
-    // Theme toggle with persistence
-    const lightBtn = document.getElementById('lightBtn');
-    const darkBtn = document.getElementById('darkBtn');
-    const root = document.documentElement;
+    /* =========================
+       Theme toggle
+       ========================= */
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+
     function setTheme(mode) {
-      if (mode === 'dark') { root.classList.add('dark'); localStorage.setItem('theme', 'dark'); }
-      else { root.classList.remove('dark'); localStorage.setItem('theme', 'light'); }
-    }
-    (function(){
-      const saved = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(saved ? saved : (prefersDark ? 'dark' : 'light'));
-    })();
-    lightBtn.addEventListener('click', () => setTheme('light'));
-    darkBtn.addEventListener('click', () => setTheme('dark'));
-
-    // Typewriter effect: Software Developer looping
-    const tw = document.getElementById('typewriter');
-    const phrase = "Software Developer";
-    let ci = 0, deleting = false;
-    const speed = { type: 80, delete: 45, pause: 900 };
-    function typeLoop() {
-      if (!deleting) {
-        tw.textContent = phrase.slice(0, ++ci);
-        if (ci === phrase.length) { deleting = true; setTimeout(typeLoop, speed.pause); return; }
+      if (mode === 'dark') {
+        body.classList.remove('light');
+        themeIcon.textContent = '🌞';
+        themeText.textContent = 'Light';
+        localStorage.setItem('theme', 'dark');
       } else {
-        tw.textContent = phrase.slice(0, --ci);
-        if (ci === 0) { deleting = false; }
+        body.classList.add('light');
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'Dark';
+        localStorage.setItem('theme', 'light');
       }
-      setTimeout(typeLoop, deleting ? speed.delete : speed.type);
     }
-    typeLoop();
-
-    // Slider with dots + arrows
-    const slidesWrap = document.getElementById('slides');
-    const dots = Array.from(document.querySelectorAll('.dot'));
-    const prev = document.getElementById('prev');
-    const next = document.getElementById('next');
-    let current = 0;
-    function updateSlider(index) {
-      current = Math.max(0, Math.min(index, dots.length - 1));
-      slidesWrap.style.transform = `translateX(-${current * 100}%)`;
-      dots.forEach((d, i) => d.classList.toggle('active', i === current));
-    }
-    dots.forEach((d, i) => d.addEventListener('click', () => updateSlider(i)));
-    prev.addEventListener('click', () => updateSlider(current - 1));
-    next.addEventListener('click', () => updateSlider(current + 1));
-
-    // Modals open/close
-    function openModal(id) {
-      const m = document.getElementById(id);
-      if (!m) return;
-      m.classList.add('open');
-      m.setAttribute('aria-hidden', 'false');
-    }
-    function closeModal(el) {
-      const m = el.closest('.modal');
-      if (!m) return;
-      m.classList.remove('open');
-      m.setAttribute('aria-hidden', 'true');
-    }
-    document.querySelectorAll('.actions .btn[data-modal]').forEach(btn => {
-      btn.addEventListener('click', () => openModal(btn.dataset.modal));
-    });
-    document.querySelectorAll('[data-close]').forEach(btn => {
-      btn.addEventListener('click', () => closeModal(btn));
-    });
-    document.querySelectorAll('.modal').forEach(m => {
-      m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); });
+    // initial
+    setTheme(localStorage.getItem('theme') || 'light');
+    themeToggle.addEventListener('click', () => {
+      const isLight = body.classList.contains('light');
+      setTheme(isLight ? 'dark' : 'light');
     });
 
-    // Contact form (simple submit)
+    /* =========================
+       Typewriter (Software Developer + skills)
+       ========================= */
+   const tw = document.getElementById('typewriter');
+const lines = ['Software Developer']; // only one line
+let charIdx = 0, deleting = false;
+
+function typeLoop() {
+  const current = lines[0];
+  if (!deleting) {
+    charIdx++;
+    tw.textContent = current.slice(0, charIdx);
+    if (charIdx === current.length) {
+      deleting = true;
+      setTimeout(typeLoop, 1000);
+      return;
+    }
+  } else {
+    charIdx--;
+    tw.textContent = current.slice(0, charIdx);
+    if (charIdx === 0) deleting = false;
+  }
+  setTimeout(typeLoop, deleting ? 50 : 80);
+}
+typeLoop();
+
+    /* =========================
+       Slider controls
+       ========================= */
+    const slidesEl = document.getElementById('slides');
+    const dots = document.querySelectorAll('.dot');
+    let currentSlide = 0;
+
+    function goToSlide(n) {
+      currentSlide = n;
+      slidesEl.style.transform = `translateX(-${n * 100}%)`;
+      dots.forEach(d => d.classList.toggle('active', Number(d.dataset.index) === n));
+    }
+    dots.forEach(d => d.addEventListener('click', () => goToSlide(Number(d.dataset.index))));
+
+    /* =========================
+       Social arrow indicator
+       ========================= */
+    const arrow = document.getElementById('arrow');
+    document.querySelectorAll('.social-link').forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        const pos = Number(link.getAttribute('data-pos'));
+        arrow.style.left = `${pos}px`;
+      });
+      link.addEventListener('focus', () => {
+        const pos = Number(link.getAttribute('data-pos'));
+        arrow.style.left = `${pos}px`;
+      });
+    });
+
+    /* =========================
+       Contact form (demo only)
+       ========================= */
     const form = document.getElementById('contactForm');
+    const status = document.getElementById('formStatus');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const message = document.getElementById('message').value.trim();
-      if (!name || !email || !message) return;
-      alert("Thanks, " + name + "! Your message has been noted.");
+      status.textContent = 'Thanks, your message has been noted (demo).';
       form.reset();
+      setTimeout(() => status.textContent = '', 2500);
     });
 
-    // Smooth overlay transition on scroll (text vs background transfer effect)
-    const overlay = document.getElementById('overlay');
-    const bg = document.getElementById('bg');
-    function onScroll() {
-      const y = window.scrollY || document.documentElement.scrollTop;
-      // Overlay alpha changes between 0.50 and 0.75 based on scroll
-      const base = getComputedStyle(document.documentElement).getPropertyValue('--bg-overlay');
-      // Parse current mode quickly: we'll compute a dynamic alpha
-      const minA = document.documentElement.classList.contains('dark') ? 0.45 : 0.55;
-      const maxA = document.documentElement.classList.contains('dark') ? 0.70 : 0.78;
-      const t = Math.min(1, y / 600);
-      const a = minA + (maxA - minA) * t;
-      overlay.style.background = `rgba(${document.documentElement.classList.contains('dark') ? '0,0,0' : '255,255,255'},${a})`;
-      // Slight parallax for background to feel real
-      bg.style.transform = `translateY(${y * 0.05}px)`;
-    }
-    window.addEventListener('scroll', onScroll);
-    onScroll();
-
-    // Snowfall (canvas) — denser, varied sizes for realistic feel
+    /* =========================
+       Snowfall effect (canvas)
+       ========================= */
     const canvas = document.getElementById('snow');
     const ctx = canvas.getContext('2d');
-    let W, H, flakes = [];
+    let W, H, flakes;
+
     function resize() {
       W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
-      flakes = [];
-      const count = Math.floor(W * H / 14000); // density
-      for (let i = 0; i < count; i++) {
-        flakes.push({
-          x: Math.random() * W,
-          y: Math.random() * H,
-          r: Math.random() * 2.8 + 0.7,     // radius varies
-          a: Math.random() * Math.PI * 2,    // angle for sway
-          v: Math.random() * 0.8 + 0.35,     // fall speed varies
-          sway: Math.random() * 1.2 + 0.3    // horizontal sway intensity
-        });
-      }
+      flakes = Array.from({length: Math.floor(W * H / 40000) + 80}).map(() => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 2.2 + 0.6,
+        d: Math.random() * 0.8 + 0.2,
+        w: Math.random() * 0.8 + 0.2
+      }));
     }
-    window.addEventListener('resize', resize);
-    resize();
     function draw() {
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = 'rgba(255,255,255,0.95)';
-      for (const f of flakes) {
-        f.y += f.v;
-        f.a += 0.01 + (f.r * 0.001); // slightly faster sway for larger flakes
-        f.x += Math.sin(f.a) * f.sway * 0.6;
-        if (f.y > H + 6) { f.y = -6; f.x = Math.random() * W; }
-        if (f.x < -12) { f.x = W + 12; }
-        if (f.x > W + 12) { f.x = -12; }
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      flakes.forEach(f => {
         ctx.beginPath();
         ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
         ctx.fill();
-      }
+        f.y += f.d;
+        f.x += Math.sin(f.y * 0.015) * f.w;
+        if (f.y > H + 2) { f.y = -4; f.x = Math.random() * W; }
+      });
       requestAnimationFrame(draw);
     }
-    draw();
+    window.addEventListener('resize', resize);
+    resize(); draw();
   </script>
 </body>
 </html>
